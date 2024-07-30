@@ -1,62 +1,59 @@
-class Book {
-  constructor(title, author, pages, isRead) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.isRead = isRead;
-  }
-  info() {
-    return `The book ${this.title} by ${this.author} has ${
-      this.pages
-    } pages, and this ${this.isRead ? "has been read" : "not read yet"}`;
-  }
-}
+// game.js
 
-const TheBook = new Book("The Book", "Jalil", 2000, true);
+let playerScore = 0;
+let computerScore = 0;
 
-console.log(TheBook.info());
+const rock = document.querySelector("#rock");
+const paper = document.querySelector("#paper");
+const scissors = document.querySelector("#scissors");
+const resultsDiv = document.querySelector("#results");
+const scoreDiv = document.querySelector("#score");
 
-// class myInfo {
-//   constructor(name, age, country) {
-//     this.name = name;
-//     this.age = age;
-//     this.country = country;
-//   }
-// }
+const getComputerChoice = () => {
+  let choices = ["rock", "paper", "scissors"];
 
-// function myInfo(name, age, country) {
-//   this.name = name;
-//   this.age = age;
-//   this.country = country;
-// }
+  let randomIndex = Math.floor(Math.random() * choices.length);
 
-// myInfo.prototype.showMyInfo = function () {
-//   return `My name is ${this.name}, i am ${this.age} years old, and i live in ${this.country}`;
-// };
-
-// const ali = new myInfo("Ali", 24, "Pakistan");
-
-// console.log(ali.showMyInfo());
-
-// console.log(Object.getPrototypeOf(ali) === myInfo.prototype);
-
-// Define the constructor function
-function myInfo(name, age, country) {
-  this.name = name;
-  this.age = age;
-  this.country = country;
-}
-
-// Add a method to the prototype of myInfo
-myInfo.prototype.showMyInfo = function () {
-  return `My name is ${this.name}, I am ${this.age} years old, and I live in ${this.country}`;
+  return choices[randomIndex];
 };
 
-// Create an instance of myInfo
-const ali = new myInfo("Ali", 24, "Pakistan");
+const playRound = (playerSelection) => {
+  let result;
+  const computerSelection = getComputerChoice();
 
-// Check the prototype of the instance
-console.log(Object.getPrototypeOf(ali) === myInfo.prototype); // true
+  if (playerSelection === computerSelection) {
+    result = `Its a ties player score:  ${playerScore} , computer score : ${computerScore} `;
+  } else if (
+    (playerSelection === "rock" && computerSelection === "scissors") ||
+    (playerSelection === "paper" && computerSelection === "rock") ||
+    (playerSelection === "scissors" && computerSelection === "paper")
+  ) {
+    result = `You win ${playerSelection} beats ${computerSelection} `;
+    playerScore++;
+  } else {
+    result = `You lose, ${computerSelection} beats ${playerSelection}`;
+    computerScore++;
+  }
+  resultsDiv.textContent = result;
+  scoreDiv.textContent = `Player Score = ${playerScore} , computer Score = ${computerScore}`;
 
-// Call the showMyInfo method
-console.log(ali.showMyInfo()); // Output: My name is Ali, I am 24 years old, and I live in Pakistan
+  if (playerScore === 5) {
+    scoreDiv.textContent += "You wind the game!";
+    resetTheGame();
+  } else if (computerScore === 5) {
+    scoreDiv.textContent += "Computer win the game";
+    resetTheGame();
+  }
+};
+
+const resetTheGame = () => {
+  playerScore = 0;
+  computerScore = 0;
+};
+
+const choiceClicked = (choice) => {
+  playRound(choice);
+};
+rock.addEventListener("click", () => choiceClicked("rock"));
+paper.addEventListener("click", () => choiceClicked("paper"));
+scissors.addEventListener("click", () => choiceClicked("scissors"));
